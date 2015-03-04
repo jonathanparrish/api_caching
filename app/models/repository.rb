@@ -19,7 +19,7 @@ class Repository
     @content["stargazers_count"].to_i
   end
 
-  def updated_at
+  def changed_at
     @content["updated_at"].to_datetime
   end
 

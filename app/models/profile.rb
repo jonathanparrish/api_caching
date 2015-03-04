@@ -1,10 +1,6 @@
 class Profile < ActiveRecord::Base
-  validates :username, presence: true, uniqueness: true
-  before_create :parse
-
-  def initialize(username)
-    @username = username
-  end
+  # validates :username, presence: true, uniqueness: true
+  # before_create :parse
 
   def self.create_from_username(username)
    response = HTTParty.get(
@@ -13,20 +9,17 @@ class Profile < ActiveRecord::Base
                     "User-Agent" => "anyone"
                    }
    )
-   if response["login"]
-     Profile.create(body: response)
-   else
-     return nil
-   end
-  end
-
-
-  private def parse
-    number_following = body["following"]
-    number_of_followers = body["followers"]
-    company_name = body["company"]
-    location = body["location"]
-    avatar_url = body["avatar_url"]
-    username = body["login"]
+    if response["login"]
+      Profile.create(body: response,
+                    number_following: response["following"],
+                    number_of_followers: response["followers"],
+                    company_name: response["company"],
+                    location: response["location"],
+                    avatar_url: response["avatar_url"],
+                    username: response["login"]
+     )
+    else
+      return nil
+    end
   end
 end
