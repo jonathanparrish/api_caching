@@ -1,29 +1,24 @@
 class Repository
-  def initialize(content)
-    @content = content
+
+  def self.create_from_username(username)
+    results = HTTParty.get(
+        "https://api.github.com/users/#{username}/repos?sort=updated",
+        :headers => {"Authorization" => "token #{ENV['GITHUB_TOKEN']}",
+                     "User-Agent" => "anyone"
+                    }
+    )
+    if response["login"]
+      Repository.create(body: response,
+                    name: response["name"],
+                    url: response["url"],
+                    number_of_forks: response["forks_count"],
+                    number_of_stars: response["stargazers_count"],
+                    changed_at: response["updated_at"],
+                    language: response["language"]
+     )
+    else
+      return nil
+    end
   end
 
-  def name
-    @content["name"]
-  end
-
-  def url
-    @content["url"]
-  end
-
-  def number_of_forks
-    @content["forks_count"].to_i
-  end
-
-  def number_of_stars
-    @content["stargazers_count"].to_i
-  end
-
-  def changed_at
-    @content["updated_at"].to_datetime
-  end
-
-  def language
-    @content["language"]
-  end
 end

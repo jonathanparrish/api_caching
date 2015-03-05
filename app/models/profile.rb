@@ -1,6 +1,5 @@
 class Profile < ActiveRecord::Base
-  # validates :username, presence: true, uniqueness: true
-  # before_create :parse
+  validates :username, presence: true, uniqueness: true
 
   def self.create_from_username(username)
    response = HTTParty.get(

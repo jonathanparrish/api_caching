@@ -1,4 +1,5 @@
 class ProfilesController < ApplicationController
+  
   def create
     Profile.create(avatar_url: @content["avatar_url"], body: @content, )
   end
